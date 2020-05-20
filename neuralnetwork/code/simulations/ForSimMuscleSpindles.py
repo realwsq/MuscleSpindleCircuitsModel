@@ -141,7 +141,7 @@ class ForSimMuscleSpindles(ForwardSimulation):
 			pp.close()
 
 
-	def save_results(self,flexorMuscle,extensorMuscle,name=""):
+	def save_results(self,flexorMuscle,extensorMuscle,name="", saveFull=False):
 		""" Save the resulting motoneurons mean firings and EMG.
 
 		Keyword arguments:
@@ -159,8 +159,13 @@ class ForSimMuscleSpindles(ForwardSimulation):
 					self._nn.cells[flexorMuscle][self._Iaf][0].get_delay())
 			else: title = 'NoEES_Delay_{2:.0f}ms'.format(self._nn.cells[flexorMuscle][self._Iaf][0].get_delay())
 			fileName = time.strftime("%Y_%m_%d_FS_"+title+name+".p")
-
+			
 			with open(self._resultsFolder+fileName, 'w') as pickle_file:
 				pickle.dump(self._estimatedEMG, pickle_file)
 				pickle.dump(self._meanFr, pickle_file)
 				pickle.dump(meanPerEraserApIaf,pickle_file)
+			if saveFull:
+				fileNameFull = time.strftime("%Y_%m_%d_FS_"+title+name+"_firings.p")
+				with open(self._resultsFolder+fileNameFull, 'w') as pickle_file:
+					pickle.dump(self._firings, pickle_file)
+

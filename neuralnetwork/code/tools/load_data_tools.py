@@ -4,6 +4,13 @@ from tools import general_tools  as gt
 from parameters import HumanParameters as hp
 from parameters import RatParameters as rp
 
+# RD 20191104: Fix for scenario where using CCV array
+# instead of MPI
+import os
+arrayID = os.getenv('SLURM_ARRAY_TASK_ID')
+if arrayID is None:
+    arrayID = ''
+
 def readCsvGeneral(file2read,headerLines,outLabels,signalsName,sep='\t'):
     outDict = {}
     dataFrame = pd.read_csv(file2read,header=headerLines,sep=sep)
@@ -20,10 +27,10 @@ def load_afferent_input(species='rat',muscles=None,exp="locomotion"):
         afferents[muscles["flex"]] = {}
         afferents[muscles["ext"]] = {}
         if exp == "locomotion":
-            afferents[muscles["flex"]]['Iaf'] = list(gt.load_txt_mpi('../inputFiles/meanFr_Ia_TA_rat.txt'))
-            afferents[muscles["flex"]]['IIf'] = list(gt.load_txt_mpi('../inputFiles/meanFr_II_TA_rat.txt'))
-            afferents[muscles["ext"]]['Iaf'] = list(gt.load_txt_mpi('../inputFiles/meanFr_Ia_GM_rat.txt'))
-            afferents[muscles["ext"]]['IIf'] = list(gt.load_txt_mpi('../inputFiles/meanFr_II_GM_rat.txt'))
+            afferents[muscles["flex"]]['Iaf'] = list(gt.load_txt_mpi('../inputFiles/meanFr_Ia_TA_rat{}.txt'.format(arrayID)))
+            afferents[muscles["flex"]]['IIf'] = list(gt.load_txt_mpi('../inputFiles/meanFr_II_TA_rat{}.txt'.format(arrayID)))
+            afferents[muscles["ext"]]['Iaf'] = list(gt.load_txt_mpi('../inputFiles/meanFr_Ia_GM_rat{}.txt'.format(arrayID)))
+            afferents[muscles["ext"]]['IIf'] = list(gt.load_txt_mpi('../inputFiles/meanFr_II_GM_rat{}.txt'.format(arrayID)))
         dtUpdateAfferent = 5
         afferentsInput = [afferents,dtUpdateAfferent]
     elif species == 'human':
@@ -32,10 +39,10 @@ def load_afferent_input(species='rat',muscles=None,exp="locomotion"):
         afferents[muscles["flex"]] = {}
         afferents[muscles["ext"]] = {}
         if exp == "locomotion":
-            afferents[muscles["flex"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_TA_human.txt"))
-            afferents[muscles["flex"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_TA_human.txt"))
-            afferents[muscles["ext"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_SOL_human.txt"))
-            afferents[muscles["ext"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_SOL_human.txt"))
+            afferents[muscles["flex"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_TA_human{}.txt".format(arrayID)))
+            afferents[muscles["flex"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_TA_human{}.txt".format(arrayID)))
+            afferents[muscles["ext"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_SOL_human{}.txt".format(arrayID)))
+            afferents[muscles["ext"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_SOL_human{}.txt".format(arrayID)))
         dtUpdateAfferent = 5
         afferentsInput = [afferents,dtUpdateAfferent]
     return afferentsInput

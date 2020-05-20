@@ -93,12 +93,16 @@ def main():
 		simulation.run()
 
 		# Extract emg responses
-		try: mEmg.append(simulation.get_estimated_emg(args.muscleName)[nSamplesToAnalyse:])
-		except (ValueError, TypeError) as error: mEmg.append(np.zeros(abs(nSamplesToAnalyse)))
+		try:
+			mEmg.append(simulation.get_estimated_emg(args.muscleName)[nSamplesToAnalyse:])
+		except (ValueError, TypeError) as error:
+			mEmg.append(np.zeros(abs(nSamplesToAnalyse)))
 
 		# Extract mn spikes
-		try: mSpikes.append(simulation.get_mn_spikes_profile(args.muscleName)[nSamplesToAnalyse:])
-		except (ValueError, TypeError) as error: mSpikes.append(np.zeros(abs(nSamplesToAnalyse)))
+		try:
+			mSpikes.append(simulation.get_mn_spikes_profile(args.muscleName)[nSamplesToAnalyse:])
+		except (ValueError, TypeError) as error:
+			mSpikes.append(np.zeros(abs(nSamplesToAnalyse)))
 
 		# plot mn membrane potentials
 		if args.membranePotential:

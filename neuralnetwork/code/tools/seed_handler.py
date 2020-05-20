@@ -1,11 +1,17 @@
 from mpi4py import MPI
 import random as rnd
 import numpy as np
-
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 sizeComm = comm.Get_size()
-seedValFile = "tools/seedVal.txt"
+
+# RD 20191104: Fix for scenario where using CCV array
+# instead of MPI
+import os
+arrayID = os.getenv('SLURM_ARRAY_TASK_ID')
+if arrayID is None:
+    arrayID = ''
+seedValFile = "tools/seedVal{}.txt".format(arrayID)
 
 def save_seed(val):
     """ saves seed val. """

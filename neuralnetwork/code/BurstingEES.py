@@ -21,7 +21,7 @@ class BurstingEES():
 		Used to implement High-Frequency Low-Amplitude EES
 	"""
 
-	def __init__(self,parallelContext,neuralNetwork,amplitude,frequency,burstsFrequency,pulsesNumber,species="rat"):
+	def __init__(self,parallelContext,neuralNetwork,amplitude,frequency,burstsFrequency,pulsesNumber,species="rat",stim_start=5):
 		""" Object initialization.
 
 		Keyword arguments:
@@ -55,7 +55,7 @@ class BurstingEES():
 			# Create the stim objetc
 			self._stim = h.NetStim()
 			self._stim.number = 100000
-			self._stim.start = 5 #lets give few ms for init purposes
+			self._stim.start = stim_start #lets give few ms for init purposes
 			self._stim.noise = 0
 
 			self._pulses = h.Vector()

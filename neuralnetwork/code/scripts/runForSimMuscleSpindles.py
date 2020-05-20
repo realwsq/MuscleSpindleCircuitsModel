@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('PS')   # generate postscript output by default
 import argparse
 import sys
 sys.path.append('../code')
@@ -40,8 +42,11 @@ def main():
 	parser.add_argument("name", help="name to add at the output files")
 	parser.add_argument("--simTime", help="simulation time", type=int, default=-1)
 	parser.add_argument("--noPlot", help="no plot flag", action="store_true")
+	parser.add_argument("--eesDelay", help="when to deliver first pulse", type=int, default=5)
 	parser.add_argument("--burstingEes", help="flag to use burst stimulation", action="store_true")
-	parser.add_argument("--nPulsesPerBurst", help="number of pulses per burst", type=int, default=5)
+	parser.add_argument("--saveFull", help="save _firings", action="store_true")
+	parser.add_argument("--nPulsesPerBurst", help="number of pulses per burst", type=int)
+	parser.add_argument("--burstDuration", help="duration of stim burst", type=int)
 	parser.add_argument("--burstsFrequency", help="stimulation frequency within bursts",type=float, default=600, choices=[gt.Range(0,1000)])
 	parser.add_argument("--seed", help="positive seed used to initialize random number generators (default = time.time())", type=int, choices=[gt.Range(0,999999)])
 	args = parser.parse_args()
@@ -63,8 +68,15 @@ def main():
 	elif args.species == "rat": muscles = rp.get_muscles_dict()
 	pc = h.ParallelContext()
 	nn=NeuralNetwork(pc,args.inputFile)
-	if not args.burstingEes: ees = EES(pc,nn,eesAmplitude,args.eesFrequency,pulsesNumber=100000,species=args.species)
-	else: ees = BurstingEES(pc,nn,eesAmplitude,args.eesFrequency,args.burstsFrequency,args.nPulsesPerBurst,species=args.species)
+	if args.nPulsesPerBurst:
+		pulsesNumber = args.nPulsesPerBurst
+	elif args.burstDuration:
+		pulsesNumber = int(args.burstDuration * 1e-3 * args.eesFrequency) + 1
+		print('Delivering {} pulses'.format(pulsesNumber))
+	else:
+		pulsesNumber = 100000
+	if not args.burstingEes: ees = EES(pc,nn,eesAmplitude,args.eesFrequency,pulsesNumber=pulsesNumber,species=args.species,stim_start=args.eesDelay)
+	else: ees = BurstingEES(pc,nn,eesAmplitude,args.eesFrequency,args.burstsFrequency,pulsesNumber,species=args.species,stim_start=args.eesDelay)
 	ees.get_amplitude(True)
 	afferentsInput = ldt.load_afferent_input(args.species,muscles)
 	simulation = ForSimMuscleSpindles(pc,nn, afferentsInput, ees, None, args.simTime)
@@ -73,7 +85,7 @@ def main():
 	simulation.run()
 	if not args.noPlot: simulation.plot(muscles["flex"],muscles["ext"],name,False)
 	comm.Barrier()
-	simulation.save_results(muscles["flex"],muscles["ext"],name)
+	simulation.save_results(muscles["flex"],muscles["ext"],name,saveFull=args.saveFull)
 
 
 if __name__ == '__main__':

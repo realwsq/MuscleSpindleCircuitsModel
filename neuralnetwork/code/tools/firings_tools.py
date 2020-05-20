@@ -3,6 +3,7 @@ import numpy as np
 import random as rnd
 import time
 import seed_handler as sh
+from scipy import signal
 sh.set_seed()
 
 if not "comm" in locals(): comm = MPI.COMM_WORLD
@@ -67,7 +68,9 @@ def exctract_firings(apListVector,maxTime = 0, samplingRate = 1000.):
 
 
 
-def compute_mean_firing_rate(firings,samplingRate = 1000.):
+def compute_mean_firing_rate(
+		firings, samplingRate=1000.,
+		cornerFrequency=100, delay_ms=None):
 	""" Return the mean firing rates given the cell firings.
 
 	Keyword arguments:
@@ -77,24 +80,40 @@ def compute_mean_firing_rate(firings,samplingRate = 1000.):
 
 	meanFr = None
 	if rank ==0:
-		interval = 100*samplingRate/1000 #ms
+		frWin = 1 #ms
+		interval = frWin * samplingRate / 1000 #samps
 		nCells = firings.shape[0]
 		nSamples = firings.shape[1]
 
 		meanFrTemp = np.zeros(nSamples)
-		meanFr = np.zeros(nSamples)
 		for i in xrange(int(interval),nSamples):
 			totAp = firings[:,i-int(interval):i].sum()
+			# meanFrTemp[i-int(round(interval/2))]=totAp/nCells*samplingRate/interval
 			meanFrTemp[i-int(round(interval/2))]=totAp/nCells*samplingRate/interval
-
 		# Smooth the data with a moving average
-		windowSize = int(25*samplingRate/1000) #ms
-		for i in xrange(windowSize,nSamples):
-			meanFr[i-int(round(windowSize/2))] = meanFrTemp[i-windowSize:i].mean()
-
+		# import pdb; pdb.set_trace()
+		# smoothWinNSamp = 30
+		# meanFr = np.zeros(nSamples)
+		# windowSize = int(smoothWinNSamp*samplingRate/1000) #ms
+		# for i in xrange(windowSize,nSamples):
+		# 	meanFr[i-int(round(windowSize/2))] = meanFrTemp[i-windowSize:i].mean()
+		# 
+		if cornerFrequency is not None:
+			sos = signal.butter(
+				2, cornerFrequency, 'low',
+				fs=samplingRate, output='sos')
+			meanFr = signal.sosfiltfilt(sos, meanFrTemp)
+		else:
+			meanFr = meanFrTemp
+		meanFr[meanFr<0] = 0
+		if delay_ms is not None:
+			dt = 1000./samplingRate
+			delay = int(delay_ms/dt)
+			meanFr = np.roll(meanFr, delay)
+			meanFr[:delay] = 0
 	return meanFr
 
-def synth_rat_emg( firings,samplingRate = 1000.,delay_ms=2):
+def synth_rat_emg(firings, samplingRate = 1000., delay_ms=2):
 	""" Return the EMG activity given the cell firings.
 
 	Keyword arguments:

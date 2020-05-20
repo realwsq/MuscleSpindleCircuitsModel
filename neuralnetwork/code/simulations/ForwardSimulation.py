@@ -44,7 +44,7 @@ class ForwardSimulation(Simulation):
 
 		if rank==1:
 			print "\nMPI execution: the cells are divided in the different hosts\n"
-
+		
 		self._nn = neuralNetwork
 		self._Iaf = self._nn.get_primary_afferents_names()[0] if self._nn.get_primary_afferents_names() else []
 		self._IIf = self._nn.get_secondary_afferents_names()[0] if self._nn.get_secondary_afferents_names() else []
@@ -179,21 +179,26 @@ class ForwardSimulation(Simulation):
 			self._estimatedEMG[muscle]={}
 			self._nSpikes[muscle]={}
 			self._nActiveCells[muscle]={}
+			#
 			for cell in self._nn.actionPotentials[muscle]:
 				self._firings[muscle][cell] = tlsf.exctract_firings(self._nn.actionPotentials[muscle][cell],self._get_tstop(),samplingRate)
 				if rank==0: self._nActiveCells[muscle][cell] = np.count_nonzero(np.sum(self._firings[muscle][cell],axis=1))
 				self._nSpikes[muscle][cell] = np.sum(self._firings[muscle][cell])
-				self._meanFr[muscle][cell] = tlsf.compute_mean_firing_rate(self._firings[muscle][cell],samplingRate)
 				if cell in self._nn.get_motoneurons_names():
-					self._estimatedEMG[muscle][cell] = tlsf.synth_rat_emg(self._firings[muscle][cell],samplingRate)
+					self._meanFr[muscle][cell] = tlsf.compute_mean_firing_rate(self._firings[muscle][cell], samplingRate, delay_ms=16)
+					self._estimatedEMG[muscle][cell] = tlsf.synth_rat_emg(self._firings[muscle][cell],samplingRate, delay_ms=16)
+				else:
+					self._meanFr[muscle][cell] = tlsf.compute_mean_firing_rate(self._firings[muscle][cell], samplingRate)
 		if rank==0: print "...completed."
 
-	def get_estimated_emg(self,muscleName):
+	def get_estimated_emg(self,muscleName,summation=True):
 		emg = [self._estimatedEMG[muscleName][mnName] for mnName in self._Mn]
-		emg = np.sum(emg,axis=0)
-		return emg
+		if summation:
+			return np.sum(emg,axis=0)
+		else:
+			return emg
 
-	def get_mn_spikes_profile(self,muscleName):
+	def get_mn_spikes_profile(self,muscleName,summation=True):
 		spikesProfile = [self._firings[muscleName][mnName] for mnName in self._Mn]
 		spikesProfile = np.sum(spikesProfile,axis=0)
 		spikesProfile = np.sum(spikesProfile,axis=0)

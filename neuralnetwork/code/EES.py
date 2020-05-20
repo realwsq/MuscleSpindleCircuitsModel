@@ -18,7 +18,7 @@ rank = comm.Get_rank()
 class EES():
 	""" Epidural Electrical Stimulation model. """
 
-	def __init__(self,parallelContext,neuralNetwork,amplitude,frequency,pulsesNumber=100000,species="rat"):
+	def __init__(self,parallelContext,neuralNetwork,amplitude,frequency,pulsesNumber=100000,species="rat",stim_start=5):
 		""" Object initialization.
 
 		Keyword arguments:
@@ -54,7 +54,7 @@ class EES():
 			# Create the stim objetc
 			self._stim = h.NetStim()
 			self._stim.number = pulsesNumber
-			self._stim.start = 5 #lets give few ms for init purposes
+			self._stim.start = stim_start #lets give few ms for init purposes
 			self._stim.noise = 0
 
 			self._pulses = h.Vector()
