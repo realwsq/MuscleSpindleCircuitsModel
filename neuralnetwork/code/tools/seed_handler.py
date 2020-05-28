@@ -1,0 +1,38 @@
+from mpi4py import MPI
+import random as rnd
+import numpy as np
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+sizeComm = comm.Get_size()
+
+# RD 20191104: Fix for scenario where using CCV array
+# instead of MPI
+import os
+arrayID = os.getenv('SLURM_ARRAY_TASK_ID')
+if arrayID is None:
+    arrayID = ''
+seedValFile = "tools/seedVal{}.txt".format(arrayID)
+
+def save_seed(val):
+    """ saves seed val. """
+    if rank == 0:
+        with open(seedValFile, "wb") as f:
+            f.write(str(int(val)))
+
+def load_seed():
+    """ loads seed val. Called by all scripts that need the shared seed value. """
+    seed = None
+    if rank == 0:
+        with open(seedValFile, "rb") as f:
+            seed = int(f.read())
+        with open(seedValFile, "wb") as f:
+            f.write(str(seed+1))
+    seed = comm.bcast(seed,root=0)
+    return seed
+
+def set_seed():
+    seed = load_seed()
+    for i in range(sizeComm):
+        if i==rank:
+            rnd.seed(seed+rank)
+            np.random.seed(seed+rank)
