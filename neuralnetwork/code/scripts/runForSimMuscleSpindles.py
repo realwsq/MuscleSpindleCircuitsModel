@@ -50,7 +50,7 @@ def main():
 	parser.add_argument("--burstsFrequency", help="stimulation frequency within bursts",type=float, default=600, choices=[gt.Range(0,1000)])
 	parser.add_argument("--seed", help="positive seed used to initialize random number generators (default = time.time())", type=int, choices=[gt.Range(0,999999)])
 	args = parser.parse_args()
-
+	print(args)
 	if args.seed is not None: sh.save_seed(args.seed)
 	else: sh.save_seed(int(time.time()))
 
@@ -89,4 +89,5 @@ def main():
 
 
 if __name__ == '__main__':
+	print('in main__')
 	main()
