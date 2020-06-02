@@ -1,0 +1,11 @@
+module: loading 'anaconda/3-5.2.0'
+module: loading 'mpi/mvapich2-2.3a_gcc'
+module: loading 'neuron/7.5'
+Warning: no DISPLAY environment variable.
+--No graphics will be displayed.
+NEURON -- VERSION 7.5 master (6b4c19f) 2017-09-25
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2016
+See http://neuron.yale.edu/neuron/credits
+
+WARNING: Error in initializing MVAPICH2 ptmalloc library.Continuing without InfiniBand registration cache support.
+>>> 

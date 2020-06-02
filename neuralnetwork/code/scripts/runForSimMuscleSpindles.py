@@ -6,12 +6,13 @@ sys.path.append('../code')
 import time as time
 from mpi4py import MPI
 from neuron import h
+print('fuck you!!!!')
 from tools import load_data_tools as ldt
 from tools import seed_handler as sh
 from tools import general_tools  as gt
 from parameters import HumanParameters as hp
 from parameters import RatParameters as rp
-
+print('fuck you!!!!')
 comm = MPI.COMM_WORLD
 sizeComm = comm.Get_size()
 rank = comm.Get_rank()
