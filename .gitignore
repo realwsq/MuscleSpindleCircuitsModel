@@ -9,3 +9,4 @@ neuralnetwork/code/mod_files/*.o
 neuralnetwork/code/.vscode
 neuralnetwork/code/*.dll
 results/*
+neuralnetwork/inputFiles/*
