@@ -85,8 +85,9 @@ def main():
 	simulation.run()
 	if not args.noPlot: simulation.plot(muscles["flex"],muscles["ext"],name,False)
 	comm.Barrier()
+        print('everything is done, Im going to save the results')
 	simulation.save_results(muscles["flex"],muscles["ext"],name,saveFull=args.saveFull)
-
+        print('done saving')
 
 if __name__ == '__main__':
 	main()
