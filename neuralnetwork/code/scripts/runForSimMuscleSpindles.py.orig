@@ -6,20 +6,14 @@ sys.path.append('../code')
 import time as time
 from mpi4py import MPI
 from neuron import h
-<<<<<<< HEAD
-=======
-print('fuck you!!!!')
->>>>>>> 91de710729639e772840dcf9a468f2899136c0a1
 from tools import load_data_tools as ldt
 from tools import seed_handler as sh
 from tools import general_tools  as gt
 from parameters import HumanParameters as hp
 from parameters import RatParameters as rp
-<<<<<<< HEAD
+import random as rnd
+import numpy as np
 
-=======
-print('fuck you!!!!')
->>>>>>> 91de710729639e772840dcf9a468f2899136c0a1
 comm = MPI.COMM_WORLD
 sizeComm = comm.Get_size()
 rank = comm.Get_rank()
@@ -58,11 +52,7 @@ def main():
 	parser.add_argument("--burstsFrequency", help="stimulation frequency within bursts",type=float, default=600, choices=[gt.Range(0,1000)])
 	parser.add_argument("--seed", help="positive seed used to initialize random number generators (default = time.time())", type=int, choices=[gt.Range(0,999999)])
 	args = parser.parse_args()
-<<<<<<< HEAD
 
-=======
-	print(args)
->>>>>>> 91de710729639e772840dcf9a468f2899136c0a1
 	if args.seed is not None: sh.save_seed(args.seed)
 	else: sh.save_seed(int(time.time()))
 
@@ -93,16 +83,22 @@ def main():
 	afferentsInput = ldt.load_afferent_input(args.species,muscles)
 	simulation = ForSimMuscleSpindles(pc,nn, afferentsInput, ees, None, args.simTime)
 
+<<<<<<< HEAD
+        seed = 202005
+        rnd.seed(seed+rank)
+        np.random.seed(seed+rank)
+=======
+	# seed = 202005
+	# rnd.seed(seed+rank)
+ #    np.random.seed(seed+rank)
+>>>>>>> b3a2813aaa88bd1cd3d0c32dc9b8429451ff3d6c
 	# Run simulation, plot results and save them
 	simulation.run()
 	if not args.noPlot: simulation.plot(muscles["flex"],muscles["ext"],name,False)
 	comm.Barrier()
+        print('everything is done, Im going to save the results')
 	simulation.save_results(muscles["flex"],muscles["ext"],name,saveFull=args.saveFull)
-
+        print('done saving')
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-=======
-	print('in main__')
->>>>>>> 91de710729639e772840dcf9a468f2899136c0a1
 	main()
