@@ -7,5 +7,7 @@ NEURON -- VERSION 7.5 master (6b4c19f) 2017-09-25
 Duke, Yale, and the BlueBrain Project -- Copyright 1984-2016
 See http://neuron.yale.edu/neuron/credits
 
+Additional mechanisms from files
+ ./mod_files/AXNODE.mod ./mod_files/AfferentFiber.mod ./mod_files/INITIAL.mod ./mod_files/IntFireMn.mod ./mod_files/MOTONEURON.mod ./mod_files/MOTONEURON_5HT.mod
 WARNING: Error in initializing MVAPICH2 ptmalloc library.Continuing without InfiniBand registration cache support.
 >>> 

@@ -11,6 +11,8 @@ from tools import seed_handler as sh
 from tools import general_tools  as gt
 from parameters import HumanParameters as hp
 from parameters import RatParameters as rp
+import random as rnd
+import numpy as np
 
 comm = MPI.COMM_WORLD
 sizeComm = comm.Get_size()
@@ -81,9 +83,9 @@ def main():
 	afferentsInput = ldt.load_afferent_input(args.species,muscles)
 	simulation = ForSimMuscleSpindles(pc,nn, afferentsInput, ees, None, args.simTime)
 
-	seed = 202005
-	rnd.seed(seed+rank)
-    np.random.seed(seed+rank)
+        seed = 202005
+        rnd.seed(seed+rank)
+        np.random.seed(seed+rank)
 	# Run simulation, plot results and save them
 	simulation.run()
 	if not args.noPlot: simulation.plot(muscles["flex"],muscles["ext"],name,False)
