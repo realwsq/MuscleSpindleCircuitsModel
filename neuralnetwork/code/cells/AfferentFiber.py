@@ -50,6 +50,7 @@ class AfferentFiber(Cell):
 		#Mean refractory period of 1.6 ms - 625 Hz
 		noisePerc = 0.1
 		self._refractoryPeriod = rnd.normalvariate(1.6,1.6*noisePerc)
+		print('in init afferent fiber, ', self._refractoryPeriod)
 		if self._refractoryPeriod>1000./self.maxFiringRate:
 			self._refractoryPeriod=1000./self.maxFiringRate
 			print "Warning: refractory period bigger than period between 2 natural pulses"
@@ -126,6 +127,7 @@ class AfferentFiber(Cell):
 			self._interval = rnd.normalvariate(mean,sigma)
 		else: self._interval = 1000.0/fr #ms
 		self._oldFr = fr
+		print('in set firing rate: afferent fiber, ', self._interval)
 
 		# Check whether after setting the new fr the fiber is ready to fire
 		if (h.t-self._lastNaturalSpikeTime)>=self._interval-(self.__class__.__updatePeriod/2.):

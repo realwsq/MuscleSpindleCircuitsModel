@@ -147,6 +147,7 @@ class Motoneuron(Cell):
 			if n<0: n=0
 			elif n>self._nDendrites: n=self._nDendrites-1
 			x = rnd.random()
+			print('in create synapse motoneuron, ', x)
 			syn = h.ExpSyn(self.dendrite[int(n)](x))
 			syn.tau = 0.5
 			syn.e = 0
