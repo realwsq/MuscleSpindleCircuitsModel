@@ -39,10 +39,14 @@ def load_afferent_input(species='rat',muscles=None,exp="locomotion"):
         afferents[muscles["flex"]] = {}
         afferents[muscles["ext"]] = {}
         if exp == "locomotion":
-            afferents[muscles["flex"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_TA_human{}.txt".format(arrayID)))
-            afferents[muscles["flex"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_TA_human{}.txt".format(arrayID)))
-            afferents[muscles["ext"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_SOL_human{}.txt".format(arrayID)))
-            afferents[muscles["ext"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_SOL_human{}.txt".format(arrayID)))
+            afferents[muscles["flex"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_TA_human0.txt"))
+            afferents[muscles["flex"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_TA_human0.txt"))
+            afferents[muscles["ext"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_SOL_human0.txt"))
+            afferents[muscles["ext"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_SOL_human0.txt"))
+            # afferents[muscles["flex"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_TA_human{}.txt".format(arrayID)))
+            # afferents[muscles["flex"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_TA_human{}.txt".format(arrayID)))
+            # afferents[muscles["ext"]]['Iaf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_Ia_SOL_human{}.txt".format(arrayID)))
+            # afferents[muscles["ext"]]['IIf'] = list(gt.load_txt_mpi("../inputFiles/meanFr_II_SOL_human{}.txt".format(arrayID)))
         dtUpdateAfferent = 5
         afferentsInput = [afferents,dtUpdateAfferent]
     return afferentsInput
