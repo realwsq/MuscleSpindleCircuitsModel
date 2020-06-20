@@ -84,9 +84,9 @@ def main():
 	simulation = ForSimMuscleSpindles(pc,nn, afferentsInput, ees, None, args.simTime)
 
 
-    # seed = 202005
-    # rnd.seed(seed+rank)
-    # np.random.seed(seed+rank)
+    seed = 202005
+    rnd.seed(seed+rank)
+    np.random.seed(seed+rank)
 	# Run simulation, plot results and save them
 	simulation.run()
 	if not args.noPlot: simulation.plot(muscles["flex"],muscles["ext"],name,False)
