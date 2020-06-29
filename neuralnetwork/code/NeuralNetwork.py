@@ -272,7 +272,7 @@ class NeuralNetwork():
 				nc = self._pc.gid_connect(source,target)
 				nc.weight[0] = rnd.normalvariate(conWeight,conWeight*noisePerc)
 				nc.delay = conDelay+rnd.normalvariate(0.25,0.25*noisePerc)
-				print('in _connect NeuralNetwork, ', source, nc.weight[0], nc.delay)
+				# print('in _connect NeuralNetwork, ', source, nc.weight[0], nc.delay)
 				self._connections.append(nc)
 		comm.Barrier()
 

@@ -29,7 +29,7 @@ class IntFireMn(Cell):
 		if self.cell.taum <= self.cell.taui2: self.cell.taum = self.cell.taui2 + 0.25
 		self.cell.refrac=rnd.normalvariate(20,20*noisePerc) # mean 50Hz
 
-		print('in init intfiremn, ', self.cell.taum, self.cell.refrac)
+		# print('in init intfiremn, ', self.cell.taum, self.cell.refrac)
 
 	@classmethod
 	def get_ees_weight(cls):
