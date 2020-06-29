@@ -10,8 +10,8 @@ TA 2
 # [SECTION 2]: Common Cells per muscle: cellClass - name - number - required cell inputs (The name depend on the cell class; Motoneuron class - MnReal name, IntFireMn class - Mn name, AfferentFiber class - I... name for primary and II.. name for secondary fibers, IntFire class - any name)
 @2
 IntFireMn Mn 169
-AfferentFiber Iaf 60
-AfferentFiber IIf 60
+AfferentFiber Iaf 500
+AfferentFiber IIf 500
 IntFire IaInt 196
 IntFire IIExInt 196
 
@@ -28,10 +28,10 @@ IntFire IIExInt 196
 
 # [SECTION 4]: Common Network Connections, equal in each muscle: fromPopulation - toSingleCell - ratio - number - weight - typeOfSynapse (If toSingleCell is a real cell then typeOfSynapse can be either "inhibitory" or "excitatory", if toSingleCell is an artificialCell then typeOfSynapse has to be "artificial".)
 @4
-Iaf Mn unique 60 0.018 artificial
-Iaf IaInt random 62 0.011 artificial
-IIf IIExInt random 62 0.011 artificial
-IIf IaInt random 62 0.011 artificial
+Iaf Mn unique 500 0.00216 artificial
+Iaf IaInt random 600 0.0011 artificial
+IIf IIExInt random 600 0.0011 artificial
+IIf IaInt random 600 0.0011 artificial
 IIExInt Mn random 116 0.007 artificial
 
 
